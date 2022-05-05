@@ -15,16 +15,25 @@ class Tree_File_System:
     def touch(self, file):
         self.childnames.append(file)
 
-    def ls(self):
-        for item in self.childnames:
-            print(item)
-
-    def cd(self, child):
-        if '..' not in child:
+    def ls(self, child=None):
+        if child != None:
             for dir in self.directories:
                 if dir.name == child:
-                    return dir 
+                    for item in dir.childnames:
+                        print(item)
+                        return
+            print('Directory does not exist.')
         else:
-            for x in range(child.count('..')):
+            for item in self.childnames:
+                print(item)
+
+    def cd(self, child):
+        for dir in self.directories:
+            if dir.name == child:
+                return dir
+        for string in child.split('/'):
+            if string != '..':
+                return False
+        for x in range(len(child.split('/'))):
                 self = self.parent_directory
-            return self
+        return self
